@@ -21,26 +21,34 @@ mongoose.connection.on('connected', () => {
 app.use(morgan('dev'))
 app.use(express.static(path.join(__dirname, "public")))
 
+app.use(express.urlencoded({ extended: false }));
 
 //setup complete ⬆️⬆️⬆️⬆️⬆️
 
 
-
+// GET Home page
 app.get("/", async (req, res) => {
     res.render("home.ejs");
 });
 
 
-app.get("/fruits", async (req, res) => {
 
-    // let FruitList = await Fruit.find()
-    // let FruitList = await Fruit.find({isReadyToEat: true})
-    let FruitList = await Fruit.find({ name: 'MANGO'})
-
-    res.send(FruitList)
-
+//GET to the /fruits/new page to create a new fruit
+app.get("/fruits/new", async (req, res) => {
+    res.render('new.ejs')
 });
 
+
+//  POST to /fruits
+app.post("/fruits", async (req, res) => {
+    const fruitData = {}
+
+    fruitData.name = req.body.name
+    fruitData.isReadyToEat = req.body.isReadyToEat
+
+    
+    res.send(fruitData)
+});
 
 
 
@@ -58,12 +66,46 @@ app.listen(3000, () => {
 // CODE GRAVEYARD
 
 // app.get("/fruits", async (req, res) => {
-//     const fruitData = {}
-//     fruitData.name = 'Blueberry'
-//     fruitData.isReadyToEat = true
+    //     const fruitData = {}
+    //     fruitData.name = 'Blueberry'
+    //     fruitData.isReadyToEat = true
+    
+    //     let createdFruit = await Fruit.create(fruitData)
+    
+    //     res.send(createdFruit)
+    
+    // });
+    
+    
+    // //-----------------------------
+    
+    // app.get("/fruits", async (req, res) => {
+        
+        //     // let FruitList = await Fruit.find()
+        //     // let FruitList = await Fruit.find({isReadyToEat: true})
+        //     let FruitList = await Fruit.find({ name: 'MANGO'})
+        
+        //     res.send(FruitList)
+        
+        // });
 
-//     let createdFruit = await Fruit.create(fruitData)
 
-//     res.send(createdFruit)
+// -------------------------------
 
-// });
+
+        // app.get("/fruits", async (req, res) => {
+        //     //Find the first thing and update it!
+        //     //let FruitList = await Fruit.findOneAndUpdate({ name: 'MANGO', isReadyToEat: true},{name: 'Sweet Mango'},{new: true})
+            
+        //     //Update a record by its ID
+        //     //let FruitList = await Fruit.findByIdAndUpdate( '6a4f6c53e74c3f62c30223be' ,{name: 'Sweet to eat'},{new: true})
+            
+        //     //Delete a record by its ID
+        //     //let FruitList = await Fruit.findByIdAndDelete('6a4f6c53e74c3f62c30223be')
+        //     let FruitList = await Fruit.findById('6a4f6c53e74c3f62c30223be')
+            
+        
+            
+        //     res.send(FruitList)
+        
+        // });

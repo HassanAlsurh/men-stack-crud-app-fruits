@@ -24,14 +24,42 @@ app.use(express.urlencoded({ extended: false }));
 
 //setup complete ⬆️⬆️⬆️⬆️⬆️
 
-// GET Home page
+// Just the home page.. not required
 app.get("/", async (req, res) => {
   res.render("home.ejs", { title: "Home" });
 });
 
-//GET to the /fruits/new page to create a new fruit
+//GET 'Index'
+app.get("/fruits", async (req, res) => {
+  const fruitList = await Fruit.find();
+  res.render("index.ejs", {
+    fruits: fruitList,
+    title: "Fruits Index",
+  });
+});
+
+//GET 'Show'
+app.get("/fruits/:fruitId", async (req, res) => {
+  const currFruit = await Fruit.findById(req.params.fruitId);
+  res.render("show.ejs", {
+    currFruit: currFruit,
+    title: currFruit.name,
+  });
+});
+
+//GET 'New'
 app.get("/fruits/new", async (req, res) => {
   res.render("new.ejs", { title: "Create New Record" });
+});
+
+//GET 'Edit'
+app.get("/fruits/:fruitId/edit", async (req, res) => {
+  const fruitToEdit = await Fruit.findById(req.params.fruitId);
+
+  res.render("edit.ejs", {
+    title: `Edit ${fruitToEdit.name}`,
+    currFruit: fruitToEdit,
+  });
 });
 
 //  POST to /fruits
@@ -50,32 +78,6 @@ app.post("/fruits", async (req, res) => {
 
   //   res.send(msg);
   res.redirect("/fruits");
-});
-
-app.get("/fruits", async (req, res) => {
-  const fruitList = await Fruit.find();
-  res.render("index.ejs", {
-    fruits: fruitList,
-    title: "Fruits Index",
-  });
-});
-
-app.get("/fruits/:fruitId", async (req, res) => {
-  const currFruit = await Fruit.findById(req.params.fruitId);
-  res.render("show.ejs", {
-    currFruit: currFruit,
-    title: currFruit.name,
-  });
-});
-
-//GET 'Edit'
-app.get("/fruits/:fruitId/edit", async (req, res) => {
-  const fruitToEdit = await Fruit.findById(req.params.fruitId);
-
-  res.render("edit.ejs", {
-    title: `Edit ${fruitToEdit.name}`,
-    currFruit: fruitToEdit,
-  });
 });
 
 //PUT 'Update'

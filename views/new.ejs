@@ -5,10 +5,22 @@
         <label for="name">Name:</label>
         <input type="text" name="name" id="name" required/>
 
+        <label for="category">Category:</label>
+       
+       <select name="category" id="category" required>
+         <option value="">Select a category</option>
+         <option value="citrus">Citrus</option>
+         <option value="berry">Berry</option>
+         <option value="tropical">Tropical</option>
+         <option value="stone-fruit">Stone Fruit</option>
+         <option value="melon">Melon</option>
+         <option value="other">Other</option>
+       </select>
  <!-- new.ejs / edit.ejs -->
 
  <div class="checkbox-div">
    <label for="ready-to-eat">Ready to Eat?</label>
+
    <input type="checkbox" name="isReadyToEat" id="ready-to-eat" />
  </div>
 

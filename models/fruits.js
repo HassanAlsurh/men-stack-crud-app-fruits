@@ -1,14 +1,21 @@
-const mongoose = require('mongoose')
+const mongoose = require("mongoose");
 
+const fruitSchema = new mongoose.Schema({
+  name: {
+    type: String,
+    required: true,
+  },
+  isReadyToEat: {
+    type: Boolean,
+    required: true,
+  },
+  category: {
+    type: String,
+    required: true,
+    enum: ["citrus", "berry", "tropical", "stone-fruit", "melon", "other"],
+  },
+});
 
-const fruitSchema = new mongoose.Schema(
-    {
-        name: String,
-        isReadyToEat: Boolean,
-    }
-)
+const Fruit = mongoose.model("Fruit", fruitSchema);
 
-const Fruit = mongoose.model('Fruit', fruitSchema)
-
-
-module.exports = Fruit
+module.exports = Fruit;

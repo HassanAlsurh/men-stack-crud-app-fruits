@@ -29,7 +29,7 @@ app.get("/", async (req, res) => {
   res.render("home.ejs", { title: "Home" });
 });
 
-//GET 'Index'
+//GET 'Index'  ------- A OK
 app.get("/fruits", async (req, res) => {
   const fruitList = await Fruit.find();
   res.render("index.ejs", {
@@ -38,7 +38,12 @@ app.get("/fruits", async (req, res) => {
   });
 });
 
-//GET 'Show'
+//GET 'New'  ------- A OK
+app.get("/fruits/new", async (req, res) => {
+  res.render("new.ejs", { title: "Create New Record" });
+});
+
+//GET 'Show' 
 app.get("/fruits/:fruitId", async (req, res) => {
   const currFruit = await Fruit.findById(req.params.fruitId);
   res.render("show.ejs", {
@@ -47,10 +52,6 @@ app.get("/fruits/:fruitId", async (req, res) => {
   });
 });
 
-//GET 'New'
-app.get("/fruits/new", async (req, res) => {
-  res.render("new.ejs", { title: "Create New Record" });
-});
 
 //GET 'Edit'
 app.get("/fruits/:fruitId/edit", async (req, res) => {
@@ -67,6 +68,7 @@ app.post("/fruits", async (req, res) => {
   const fruitData = {};
 
   fruitData.name = req.body.name;
+  fruitData.category = req.body.category;
 
   if (req.body.isReadyToEat === "on") {
     fruitData.isReadyToEat = true;
@@ -75,19 +77,29 @@ app.post("/fruits", async (req, res) => {
   }
 
   let msg = await Fruit.create(fruitData);
-
+console.log('>>>>>>>>>>>>>>>', msg)
   //   res.send(msg);
   res.redirect("/fruits");
 });
 
 //PUT 'Update'
 app.put("/fruits/:fruitId", async (req, res) => {
+  const newRecord = {}
+  
+  newRecord.name = req.body.name
+  console.log('Name>>>>>>>>>',req.body.name)
   if (req.body.isReadyToEat === "on") {
-    req.body.isReadyToEat = true;
+    newRecord.isReadyToEat = true;
   } else {
-    req.body.isReadyToEat = false;
+    newRecord.isReadyToEat = false;
   }
-  await Fruit.findByIdAndUpdate(req.params.fruitId, req.body);
+
+  newRecord.category = req.body.category
+
+  console.log('>>>>>>>>>', newRecord)
+
+  await Fruit.findByIdAndUpdate(req.params.fruitId, newRecord);
+
   res.redirect(`/fruits/${req.params.fruitId}`);
 });
 

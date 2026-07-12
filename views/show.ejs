@@ -1,8 +1,9 @@
 <%- include('./partials/nav') %> 
 
     <h1><%= currFruit.name %></h1>
+    <h3><%= currFruit.category %></h3>
 
-  <!-- Conditional rendering based on fruit's readiness -->
+
   <% if (currFruit.isReadyToEat) { %>
     <p>This fruit is ready to eat!</p>
   <% } else { %>
@@ -13,11 +14,12 @@
   <form action="/fruits/<%=currFruit._id%>?_method=DELETE" method="POST">
   <button type="submit">Delete <%= currFruit.name %></button>
 </form>
+
          <a class="edit-link" href="/fruits/<%= currFruit._id %>/edit">
      <div class="edit-text">Edit <%= currFruit.name %></div>
    </a>
-        <!-- edit.ejs / show.ejs -->
-      
+
+   
       <a class="fruits-index-link" href="/fruits">
       <div class="index-link-text">Back to Fruits</div>
       </a>

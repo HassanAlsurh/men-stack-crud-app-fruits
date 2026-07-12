@@ -18,6 +18,18 @@
           value="<%= currFruit.name %>"
         />
 
+                <label for="category">Category:</label>
+       
+       <select name="category" id="category" required >
+         <option value="" <% if (currFruit.category === '') { %> selected <% } %> >Select a category</option>
+         <option value="citrus" <% if (currFruit.category === 'citrus') { %> selected <% } %> >Citrus</option>
+         <option value="berry" <% if (currFruit.category === 'berry') { %> selected <% } %>>Berry</option>
+         <option value="tropical" <% if (currFruit.category === 'tropical') { %> selected <% } %>>Tropical</option>
+         <option value="stone-fruit" <% if (currFruit.category === 'stone-fruit') { %> selected <% } %>>Stone Fruit</option>
+         <option value="melon" <% if (currFruit.category === 'melon') { %> selected <% } %>>Melon</option>
+         <option value="other" <% if (currFruit.category === 'other') { %> selected <% } %>>Other</option>
+       </select>
+
         <label for="isReadyToEat">Ready to Eat?</label>
         <input type="checkbox" name="isReadyToEat" <% if (currFruit.isReadyToEat) { %>checked<% } %> >
         <button type="submit">Update Fruit</button>

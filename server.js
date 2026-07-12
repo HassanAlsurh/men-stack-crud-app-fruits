@@ -3,6 +3,7 @@ dns.setServers(["8.8.8.8", "1.1.1.1"]);
 
 const dotenv = require("dotenv").config();
 const express = require("express");
+const methodOverride = require("method-override");
 const morgan = require("morgan");
 const path = require("path");
 const mongoose = require("mongoose");
@@ -15,6 +16,7 @@ mongoose.connection.on("connected", () => {
   console.log(`Connected successfully to: ${mongoose.connection.name}`);
 });
 
+app.use(methodOverride("_method"));
 app.use(morgan("dev"));
 app.use(express.static(path.join(__dirname, "public")));
 
@@ -24,12 +26,12 @@ app.use(express.urlencoded({ extended: false }));
 
 // GET Home page
 app.get("/", async (req, res) => {
-  res.render("home.ejs");
+  res.render("home.ejs", { title: "Home" });
 });
 
 //GET to the /fruits/new page to create a new fruit
 app.get("/fruits/new", async (req, res) => {
-  res.render("new.ejs");
+  res.render("new.ejs", { title: "Create New Record" });
 });
 
 //  POST to /fruits
@@ -47,21 +49,58 @@ app.post("/fruits", async (req, res) => {
   let msg = await Fruit.create(fruitData);
 
   //   res.send(msg);
-  res.redirect("/fruits/new");
+  res.redirect("/fruits");
 });
 
-app.get("/fruits", (req, res) => {
-     const fruitList = await Fruit.find()
+app.get("/fruits", async (req, res) => {
+  const fruitList = await Fruit.find();
+  res.render("index.ejs", {
+    fruits: fruitList,
+    title: "Fruits Index",
+  });
+});
 
-     res.render()
+app.get("/fruits/:fruitId", async (req, res) => {
+  const currFruit = await Fruit.findById(req.params.fruitId);
+  res.render("show.ejs", {
+    currFruit: currFruit,
+    title: currFruit.name,
+  });
+});
 
+//GET 'Edit'
+app.get("/fruits/:fruitId/edit", async (req, res) => {
+  const fruitToEdit = await Fruit.findById(req.params.fruitId);
+
+  res.render("edit.ejs", {
+    title: `Edit ${fruitToEdit.name}`,
+    currFruit: fruitToEdit,
+  });
+});
+
+//PUT 'Update'
+app.put("/fruits/:fruitId", async (req, res) => {
+  if (req.body.isReadyToEat === "on") {
+    req.body.isReadyToEat = true;
+  } else {
+    req.body.isReadyToEat = false;
+  }
+  await Fruit.findByIdAndUpdate(req.params.fruitId, req.body);
+  res.redirect(`/fruits/${req.params.fruitId}`);
+});
+
+//DELETE 'Destroy'
+app.delete("/fruits/:fruitId", async (req, res) => {
+  await Fruit.findByIdAndDelete(req.params.fruitId);
+  res.redirect("/fruits");
 });
 
 app.listen(3000, () => {
   console.log("Listening on port 3000");
 });
 
-// prettier - ignore
+/* prettier-ignore-start */
+
 // CODE GRAVEYARD
 
 // app.get("/fruits", async (req, res) => {
@@ -103,3 +142,5 @@ app.listen(3000, () => {
 //     res.send(FruitList)
 
 // });
+
+/* prettier-ignore-end */
